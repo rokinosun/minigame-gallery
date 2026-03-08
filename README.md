@@ -58,9 +58,15 @@ GitHub Pages で公開する静的サイト（MVP）です。
 
 - basename固定: `reversi` を固定し、`reversi.html / reversi.js / reversi.wasm / reversi.pck` を同時更新する
 - クリーン置換: 新規出力時は `games/reversi/` 直下を新しい basename 一式に揃え、旧 basename は公開導線から外す
+- launcher明示: `GODOT_CONFIG.args = ["--main-pack","reversi.pck"]` を保持し、main pack解決先を固定する
 - 公開後確認URL:
   - ギャラリー: `https://rokinosun.github.io/minigame-gallery/`
   - Reversi本体: `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.html`
+
+## TASK-012 root cause
+
+- 原因: デプロイ済みランタイムが main pack 解決を自動推論に依存しており、過去成果物の混在やキャッシュ状態によって `.pck` 参照が崩れて `Couldn't load project data at path '.'` が発生。
+- 対策: basename統一 + クリーン置換 + `--main-pack reversi.pck` 明示 + service worker干渉回避設定を適用。
 
 ## ローカル開発手順（2プロセス）
 
