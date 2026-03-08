@@ -2,11 +2,15 @@
 
 GitHub Pages で公開する静的サイト（MVP）です。
 
-## TASK-006 追加内容（端末間シグナリングMVP）
+## TASK-007 追加内容（security hardening）
 
 - フロント: `index.html`
-- シグナリングAPI: `signaling-server/server.js`（Node.js標準HTTP / メモリ実装）
-- 仕様維持:
+- シグナリングAPI: `signaling-server/server.js`（Node.js標準HTTP）
+- 強化点:
+  - 認証/認可: Bearer token（host / participant ロール分離）
+  - 永続化: `signaling-server/data/state.json` へ room/request 状態を保存
+  - CORS: allowlist 方式（wildcard廃止）
+- TASK-005/006 仕様維持:
   - room ID: `^[A-Za-z0-9]{8}$`（8文字固定、大小区別）
   - `mgg_user_id` を LocalStorage 保存
   - 参加申請タイムアウト60秒
@@ -31,6 +35,12 @@ GitHub Pages で公開する静的サイト（MVP）です。
 ## ローカル開発手順（2プロセス）
 
 1. シグナリングAPI起動（ターミナルA）
+   - 必須環境変数（本番で要変更）:
+     - `AUTH_SECRET`: トークン署名秘密鍵
+   - 推奨環境変数:
+     - `CORS_ALLOWLIST`: 許可Originをカンマ区切り（例: `https://rokinosun.github.io,http://localhost:5500`)
+     - `STATE_FILE`: 永続化先JSONファイルパス
+     - `TOKEN_TTL_SECONDS`: トークン有効期限（秒）
    - `npm run signaling`
    - デフォルト: `http://localhost:8787`
 2. フロント静的配信（ターミナルB、リポジトリ直下）
@@ -47,6 +57,19 @@ GitHub Pages で公開する静的サイト（MVP）です。
 5. 端末Bで結果表示を確認（approved/rejected）
 6. タイムアウト確認: 端末Aで放置し、端末Bで60秒後に `timeout` 表示を確認
 
+## セキュリティ確認手順
+
+1. 未認証拒否:
+   - `Authorization` なしで `/api/rooms/:id/join` を呼ぶと `401 missing_auth_token`
+2. 権限外拒否:
+   - participant token で `/host/requests/.../decision` を呼ぶと `403 forbidden_role`
+3. 不正トークン拒否:
+   - 改ざんトークンで呼ぶと `401 invalid_token_signature`
+4. CORS allowlist:
+   - allowlist外の `Origin` で `OPTIONS/POST` を呼ぶと `403 origin_not_allowed`
+5. 永続化:
+   - 申請作成後にサーバー再起動しても `STATE_FILE` から状態復元されることを確認
+
 ## デプロイ前提
 
 - フロント: GitHub Pages（main / root）
@@ -55,10 +78,10 @@ GitHub Pages で公開する静的サイト（MVP）です。
 
 ## 既知制約・セキュリティ注意
 
-- このMVPは認証なし・メモリ保持のみで、再起動時に申請状態が消えます。
-- CORSは `*` のため、本番では許可オリジン制限が必要です。
+- Bearer tokenは最小実装のため、失効リストやrefresh tokenは未実装です。
+- 永続化はJSONファイルのため、大規模同時接続には不向きです（DB移行が必要）。
 - HTTPS環境ではシグナリングもHTTPS推奨（Mixed Content回避）。
-- 不正な承認操作対策（認証/署名）は未実装です。
+- レート制限・WAF・監査ログは未実装です。
 
 ## 補足
 

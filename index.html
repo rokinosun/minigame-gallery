@@ -70,8 +70,8 @@
     </section>
 
     <section id="room" class="panel section">
-      <h2>Room URL + ホスト承認フロー（TASK-006）</h2>
-      <p class="small">仕様: <code>^[A-Za-z0-9]{8}$</code> / タイムアウト60秒 / 同名ユーザー名許可 / 再参加時も再承認</p>
+      <h2>Room URL + ホスト承認フロー（TASK-007）</h2>
+      <p class="small">仕様: <code>^[A-Za-z0-9]{8}$</code> / タイムアウト60秒 / 同名ユーザー名許可 / 再参加時も再承認 / Bearer認証</p>
       <div class="row">
         <input class="input mono" id="signal-base-url" type="text" placeholder="signaling base url (例: http://localhost:8787)">
         <button class="button" id="save-signal-btn" type="button">シグナリングURL保存</button>
@@ -117,7 +117,6 @@
   <script>
     (function () {
       var ROOM_REGEX = /^[A-Za-z0-9]{8}$/;
-      var TIMEOUT_MS = 60000;
       var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       var USER_ID_KEY = "mgg_user_id";
       var SESSION_ID_KEY = "mgg_session_id";
@@ -149,6 +148,8 @@
 
       var activeHostRoom = "";
       var activeRequest = null;
+      var participantToken = "";
+      var hostToken = "";
 
       var initialSignal = new URLSearchParams(window.location.search).get("signal")
         || localStorage.getItem(SIGNAL_BASE_KEY)
@@ -219,10 +220,13 @@
         history.replaceState({}, "", url.toString());
       }
 
-      async function api(path, method, body) {
+      async function api(path, method, body, token) {
         var base = getSignalBase();
         if (!base) throw new Error("シグナリングURLが未設定です。");
         var options = { method: method || "GET", headers: { "Content-Type": "application/json" } };
+        if (token) {
+          options.headers.Authorization = "Bearer " + token;
+        }
         if (body) options.body = JSON.stringify(body);
         var res = await fetch(base + path, options);
         var data = await res.json().catch(function () { return {}; });
@@ -232,16 +236,34 @@
         return data;
       }
 
+      async function refreshParticipantToken() {
+        var data = await api("/api/auth/participant", "POST", { userId: userId });
+        participantToken = data.token || "";
+      }
+
+      async function refreshHostToken(roomId) {
+        var data = await api("/api/auth/host", "POST", {
+          roomId: roomId,
+          userId: userId,
+          hostSessionId: sessionId
+        });
+        hostToken = data.token || "";
+      }
+
       async function claimHost(roomId) {
         var valid = validateRoomId(roomId);
         if (valid) {
           setStatus(hostStatusEl, "ng", valid);
           return;
         }
+        if (!participantToken) {
+          await refreshParticipantToken();
+        }
+        await refreshHostToken(roomId);
         var data = await api("/api/rooms/" + roomId + "/host/claim", "POST", {
           hostUserId: userId,
           hostSessionId: sessionId
-        });
+        }, hostToken);
         activeHostRoom = roomId;
         hostRoomIdEl.value = roomId;
         shareUrlEl.value = buildShareUrl(roomId);
@@ -277,7 +299,7 @@
       async function refreshHostRequests() {
         if (!activeHostRoom) return;
         try {
-          var data = await api("/api/rooms/" + activeHostRoom + "/host/requests?hostSessionId=" + encodeURIComponent(sessionId), "GET");
+          var data = await api("/api/rooms/" + activeHostRoom + "/host/requests", "GET", null, hostToken);
           renderHostRequests(data.requests || []);
         } catch (err) {
           setStatus(hostStatusEl, "ng", "ホスト申請一覧の取得失敗: " + err.message);
@@ -288,9 +310,8 @@
         if (!activeHostRoom) return;
         try {
           await api("/api/rooms/" + activeHostRoom + "/host/requests/" + requestId + "/decision", "POST", {
-            hostSessionId: sessionId,
             decision: decision
-          });
+          }, hostToken);
           setStatus(hostStatusEl, "ok", "申請を" + (decision === "approved" ? "承認" : "拒否") + "しました。");
           await refreshHostRequests();
           await refreshJoinStatus();
@@ -312,10 +333,13 @@
           return;
         }
         try {
+          if (!participantToken) {
+            await refreshParticipantToken();
+          }
           var data = await api("/api/rooms/" + roomId + "/join", "POST", {
             userId: userId,
             userName: userName
-          });
+          }, participantToken);
           activeRequest = { roomId: roomId, requestId: data.request.requestId };
           setStatus(joinStatusEl, "warn", "申請を送信しました。承認待ち（60秒以内）です。");
           updateUrlRoom(roomId);
@@ -332,7 +356,7 @@
       async function refreshJoinStatus() {
         if (!activeRequest) return;
         try {
-          var data = await api("/api/rooms/" + activeRequest.roomId + "/requests/" + activeRequest.requestId + "/status?userId=" + encodeURIComponent(userId), "GET");
+          var data = await api("/api/rooms/" + activeRequest.roomId + "/requests/" + activeRequest.requestId + "/status?userId=" + encodeURIComponent(userId), "GET", null, participantToken);
           var req = data.request;
           if (req.status === "pending") {
             var sec = Math.max(0, Math.ceil((req.deadlineAt - Date.now()) / 1000));
@@ -352,7 +376,9 @@
       saveSignalBtn.addEventListener("click", function () {
         localStorage.setItem(SIGNAL_BASE_KEY, getSignalBase());
         renderSignalBase();
-        setStatus(signalStatus, "ok", "シグナリングURLを保存しました。");
+        participantToken = "";
+        hostToken = "";
+        setStatus(signalStatus, "ok", "シグナリングURLを保存しました。トークンは再取得されます。");
       });
 
       createRoomBtn.addEventListener("click", async function () {
@@ -409,9 +435,16 @@
         refreshJoinStatus();
       }, 1000);
 
-      initFromQuery();
-      renderHostRequests([]);
-      setStatus(signalStatus, "warn", "シグナリングURLを確認してからテストしてください。");
+      (async function bootstrap() {
+        initFromQuery();
+        renderHostRequests([]);
+        try {
+          await refreshParticipantToken();
+          setStatus(signalStatus, "ok", "参加者トークン取得済み。テスト可能です。");
+        } catch (err) {
+          setStatus(signalStatus, "ng", "認証初期化失敗: " + err.message);
+        }
+      })();
     })();
   </script>
 </body>
