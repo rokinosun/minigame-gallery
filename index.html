@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniGame Gallery</title>
+  <meta name="description" content="ブラウザで遊べるミニゲームギャラリーのMVPランディングページ">
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --text: #12202b;
+      --muted: #4f616f;
+      --card: #ffffff;
+      --line: #dbe3ea;
+      --accent: #0b6fa4;
+      --accent-soft: #dff1fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Yu Gothic UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, #e9f7ff 0%, transparent 30%),
+        radial-gradient(circle at 100% 100%, #fff6e7 0%, transparent 35%),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: min(960px, 92vw);
+      margin: 0 auto;
+      padding: 28px 0 52px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(18, 32, 43, 0.07);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      margin: 12px 0 0;
+      font-size: clamp(30px, 6vw, 44px);
+      line-height: 1.1;
+    }
+
+    .lead {
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 64ch;
+    }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .button {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      font-weight: 700;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .game h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .game p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4e3b18;
+      background: #ffefcc;
+      border: 1px solid #f6dca2;
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="panel">
+      <span class="eyebrow">MINIGAME GALLERY MVP</span>
+      <h1>ブラウザですぐ遊べる<br>ミニゲーム集</h1>
+      <p class="lead">
+        ログイン不要で開始できる軽量ゲームギャラリーです。ゲームページではルーム作成・URL共有を起点に、友達と対戦できる構成を想定しています。
+      </p>
+      <div class="links">
+        <a class="button primary" href="#games">ゲーム一覧を見る</a>
+        <a class="button" href="#guide">参加方法を見る</a>
+      </div>
+    </section>
+
+    <section id="games" class="panel section">
+      <h2>ゲーム一覧（プレースホルダ）</h2>
+      <div class="grid">
+        <article class="panel game">
+          <h3>オセロ</h3>
+          <p>2人対戦向け。ルームURL共有で参加。</p>
+          <span class="tag">公開準備中</span>
+        </article>
+        <article class="panel game">
+          <h3>〇×ゲーム</h3>
+          <p>短時間で遊べるシンプル対戦。</p>
+          <span class="tag">公開準備中</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="guide" class="panel section">
+      <h2>導線（MVP）</h2>
+      <ol>
+        <li>トップでゲームを選択</li>
+        <li>ゲームページでルームを作成</li>
+        <li>URL共有で友達を招待して開始</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
