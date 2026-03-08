@@ -18,9 +18,7 @@
       --warn: #9a5b00;
       --ng: #9b1c1c;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: "Segoe UI", "Yu Gothic UI", sans-serif;
@@ -31,195 +29,61 @@
         var(--bg);
       line-height: 1.5;
     }
-
-    .container {
-      width: min(1024px, 92vw);
-      margin: 0 auto;
-      padding: 28px 0 52px;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow: 0 10px 24px rgba(18, 32, 43, 0.07);
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    h1 {
-      margin: 12px 0 0;
-      font-size: clamp(30px, 6vw, 44px);
-      line-height: 1.1;
-    }
-
-    .lead {
-      margin: 12px 0 0;
-      color: var(--muted);
-      max-width: 64ch;
-    }
-
-    .links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .button {
-      display: inline-block;
-      text-decoration: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      font-weight: 700;
-      color: var(--text);
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .button.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .button.danger {
-      border-color: #d6b1b1;
-      color: #6d1d1d;
-      background: #fff6f6;
-    }
-
+    .container { width: min(1024px, 92vw); margin: 0 auto; padding: 28px 0 52px; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; box-shadow: 0 10px 24px rgba(18, 32, 43, 0.07); }
+    .eyebrow { display: inline-block; padding: 5px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+    h1 { margin: 12px 0 0; font-size: clamp(30px, 6vw, 44px); line-height: 1.1; }
+    .lead { margin: 12px 0 0; color: var(--muted); max-width: 64ch; }
+    .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .button { display: inline-block; text-decoration: none; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); font-weight: 700; color: var(--text); background: #fff; cursor: pointer; }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .button.danger { border-color: #d6b1b1; color: #6d1d1d; background: #fff6f6; }
     .section { margin-top: 18px; }
-
-    .tools {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .input {
-      width: 100%;
-      max-width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 11px;
-      font: inherit;
-      color: var(--text);
-      background: #fff;
-    }
-
-    .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      letter-spacing: 0.03em;
-    }
-
-    .small {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .status {
-      margin: 10px 0 0;
-      font-size: 14px;
-      min-height: 1.4em;
-    }
-
+    .tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 11px; font: inherit; color: var(--text); background: #fff; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.03em; }
+    .small { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    .status { margin: 10px 0 0; font-size: 14px; min-height: 1.4em; }
     .status.ok { color: var(--ok); }
     .status.warn { color: var(--warn); }
     .status.ng { color: var(--ng); }
-
-    .requests {
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-
-    .req-item {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px;
-      background: #fbfdff;
-    }
-
-    .req-meta {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .tag {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #4e3b18;
-      background: #ffefcc;
-      border: 1px solid #f6dca2;
-      border-radius: 999px;
-      padding: 4px 8px;
-    }
-
-    @media (max-width: 860px) {
-      .tools, .grid { grid-template-columns: 1fr; }
-    }
+    .requests { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .req-item { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fbfdff; }
+    .req-meta { margin: 0; font-size: 13px; color: var(--muted); }
+    @media (max-width: 860px) { .tools { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <main class="container">
     <section class="panel">
       <span class="eyebrow">MINIGAME GALLERY MVP</span>
-      <h1>ブラウザですぐ遊べる<br>ミニゲーム集</h1>
+      <h1>端末間で動く<br>Room承認フロー</h1>
       <p class="lead">
-        ログイン不要で開始できる軽量ゲームギャラリーです。以下はRoom URL生成とホスト承認フローを静的で再現したMVPです。
+        room ID 8文字英数字（大小区別）と、60秒タイムアウト付きの申請/承認フローを実装したMVPです。
       </p>
       <div class="links">
         <a class="button primary" href="#room">ルーム導線へ移動</a>
-        <a class="button" href="#guide">遊び方を見る</a>
       </div>
-      <p class="small">現在の user ID: <span id="user-id-label" class="mono"></span></p>
+      <p class="small">user ID(LocalStorage): <span id="user-id-label" class="mono"></span></p>
+      <p class="small">session ID(タブ単位): <span id="session-id-label" class="mono"></span></p>
     </section>
 
     <section id="room" class="panel section">
-      <h2>Room URL + ホスト承認フロー（MVP）</h2>
-      <p class="small">
-        room ID仕様: 半角英数字のみ / 8文字固定 / 大文字小文字区別（<code>^[A-Za-z0-9]{8}$</code>）
-      </p>
+      <h2>Room URL + ホスト承認フロー（TASK-006）</h2>
+      <p class="small">仕様: <code>^[A-Za-z0-9]{8}$</code> / タイムアウト60秒 / 同名ユーザー名許可 / 再参加時も再承認</p>
+      <div class="row">
+        <input class="input mono" id="signal-base-url" type="text" placeholder="signaling base url (例: http://localhost:8787)">
+        <button class="button" id="save-signal-btn" type="button">シグナリングURL保存</button>
+      </div>
+      <p class="small">接続先: <span id="signal-base-label" class="mono"></span></p>
+      <p class="status" id="signal-status"></p>
 
       <div class="tools">
         <article class="panel">
           <h3>ホスト側</h3>
-          <p class="small">ルーム作成後、参加申請を承認/拒否します。承認は毎回必要です。</p>
           <div class="row">
-            <button class="button primary" id="create-room-btn" type="button">room IDを生成</button>
+            <button class="button primary" id="create-room-btn" type="button">room IDを生成してホスト開始</button>
             <button class="button" id="copy-url-btn" type="button">共有URLをコピー</button>
           </div>
           <div class="row">
@@ -235,12 +99,11 @@
 
         <article class="panel">
           <h3>参加側</h3>
-          <p class="small">ユーザー名は同名可。申請は60秒でタイムアウトします。</p>
           <div class="row">
-            <input class="input" id="join-name" type="text" maxlength="20" placeholder="ユーザー名を入力" aria-label="username">
+            <input class="input" id="join-name" type="text" maxlength="20" placeholder="ユーザー名（同名可）">
           </div>
           <div class="row">
-            <input class="input mono" id="join-room-id" type="text" maxlength="8" placeholder="8文字のroom ID" aria-label="room id">
+            <input class="input mono" id="join-room-id" type="text" maxlength="8" placeholder="8文字room ID">
           </div>
           <div class="row">
             <button class="button primary" id="join-btn" type="button">参加申請を送信</button>
@@ -249,220 +112,69 @@
         </article>
       </div>
     </section>
-
-    <section id="games" class="panel section">
-      <h2>ゲーム一覧（プレースホルダ）</h2>
-      <div class="grid">
-        <article class="panel">
-          <h3>オセロ</h3>
-          <p>2人対戦向け。ルームURL共有で参加。</p>
-          <span class="tag">公開準備中</span>
-        </article>
-        <article class="panel">
-          <h3>〇×ゲーム</h3>
-          <p>短時間で遊べるシンプル対戦。</p>
-          <span class="tag">公開準備中</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="guide" class="panel section">
-      <h2>導線（MVP）</h2>
-      <ol>
-        <li>ホストが room ID を生成して共有URLを配布</li>
-        <li>参加者が user名 と room ID で申請</li>
-        <li>ホストが承認/拒否し、参加者に結果が反映</li>
-      </ol>
-    </section>
   </main>
 
   <script>
     (function () {
       var ROOM_REGEX = /^[A-Za-z0-9]{8}$/;
-      var ALNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       var TIMEOUT_MS = 60000;
+      var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       var USER_ID_KEY = "mgg_user_id";
       var SESSION_ID_KEY = "mgg_session_id";
-      var HOST_KEY_PREFIX = "mgg_host_";
-      var REQ_KEY_PREFIX = "mgg_reqs_";
+      var SIGNAL_BASE_KEY = "mgg_signal_base";
+
+      var userIdLabel = document.getElementById("user-id-label");
+      var sessionIdLabel = document.getElementById("session-id-label");
+      var signalInput = document.getElementById("signal-base-url");
+      var signalLabel = document.getElementById("signal-base-label");
+      var signalStatus = document.getElementById("signal-status");
+      var saveSignalBtn = document.getElementById("save-signal-btn");
 
       var createRoomBtn = document.getElementById("create-room-btn");
       var copyUrlBtn = document.getElementById("copy-url-btn");
-      var joinBtn = document.getElementById("join-btn");
       var hostRoomIdEl = document.getElementById("host-room-id");
       var shareUrlEl = document.getElementById("share-url");
       var hostStatusEl = document.getElementById("host-status");
-      var joinStatusEl = document.getElementById("join-status");
+      var requestListEl = document.getElementById("request-list");
+
       var joinNameEl = document.getElementById("join-name");
       var joinRoomEl = document.getElementById("join-room-id");
-      var requestListEl = document.getElementById("request-list");
-      var userIdLabelEl = document.getElementById("user-id-label");
+      var joinBtn = document.getElementById("join-btn");
+      var joinStatusEl = document.getElementById("join-status");
+
+      var userId = ensureStoredId(USER_ID_KEY, 12, localStorage);
+      var sessionId = ensureStoredId(SESSION_ID_KEY, 12, sessionStorage);
+      userIdLabel.textContent = userId;
+      sessionIdLabel.textContent = sessionId;
 
       var activeHostRoom = "";
-      var activeJoinRequest = null;
-      var userId = ensureStoredId(USER_ID_KEY, 12);
-      var sessionId = ensureSessionId();
-      userIdLabelEl.textContent = userId;
+      var activeRequest = null;
 
-      function ensureStoredId(key, length) {
-        var saved = localStorage.getItem(key);
+      var initialSignal = new URLSearchParams(window.location.search).get("signal")
+        || localStorage.getItem(SIGNAL_BASE_KEY)
+        || "http://localhost:8787";
+      signalInput.value = initialSignal;
+      renderSignalBase();
+
+      function ensureStoredId(key, length, store) {
+        var saved = store.getItem(key);
         if (saved) { return saved; }
-        var next = generateAlphaNum(length);
-        localStorage.setItem(key, next);
-        return next;
+        var generated = randomAlphaNum(length);
+        store.setItem(key, generated);
+        return generated;
       }
 
-      function ensureSessionId() {
-        var saved = sessionStorage.getItem(SESSION_ID_KEY);
-        if (saved) { return saved; }
-        var next = generateAlphaNum(12);
-        sessionStorage.setItem(SESSION_ID_KEY, next);
-        return next;
-      }
-
-      function generateAlphaNum(length) {
+      function randomAlphaNum(length) {
         var bytes = new Uint8Array(length);
         crypto.getRandomValues(bytes);
         var out = "";
-        for (var i = 0; i < length; i += 1) {
-          out += ALNUM[bytes[i] % ALNUM.length];
-        }
+        for (var i = 0; i < length; i += 1) out += CHARS[bytes[i] % CHARS.length];
         return out;
       }
 
-      function setStatus(el, type, message) {
+      function setStatus(el, type, text) {
         el.className = "status " + type;
-        el.textContent = message;
-      }
-
-      function validateRoomId(value) {
-        if (!ROOM_REGEX.test(value || "")) {
-          return "room IDは半角英数字8文字で入力してください（大文字小文字区別）。";
-        }
-        return "";
-      }
-
-      function hostKey(roomId) {
-        return HOST_KEY_PREFIX + roomId;
-      }
-
-      function reqKey(roomId) {
-        return REQ_KEY_PREFIX + roomId;
-      }
-
-      function readJson(key, fallback) {
-        try {
-          var raw = localStorage.getItem(key);
-          return raw ? JSON.parse(raw) : fallback;
-        } catch (err) {
-          return fallback;
-        }
-      }
-
-      function writeJson(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-      }
-
-      function buildShareUrl(roomId) {
-        var url = new URL(window.location.href);
-        url.searchParams.set("room", roomId);
-        return url.toString();
-      }
-
-      function setUrlRoom(roomId) {
-        var next = new URL(window.location.href);
-        next.searchParams.set("room", roomId);
-        history.replaceState({}, "", next.toString());
-      }
-
-      function claimHost(roomId) {
-        var now = Date.now();
-        writeJson(hostKey(roomId), {
-          roomId: roomId,
-          hostUserId: userId,
-          hostSessionId: sessionId,
-          updatedAt: now
-        });
-        activeHostRoom = roomId;
-        hostRoomIdEl.value = roomId;
-        shareUrlEl.value = buildShareUrl(roomId);
-      }
-
-      function isHostSession(roomId) {
-        var data = readJson(hostKey(roomId), null);
-        return !!(data && data.hostSessionId === sessionId);
-      }
-
-      function loadRequests(roomId) {
-        return readJson(reqKey(roomId), []);
-      }
-
-      function saveRequests(roomId, list) {
-        writeJson(reqKey(roomId), list);
-      }
-
-      function applyTimeouts(roomId) {
-        if (!roomId) { return false; }
-        var list = loadRequests(roomId);
-        var now = Date.now();
-        var changed = false;
-        var next = list.map(function (req) {
-          if (req.status === "pending" && now >= req.deadlineAt) {
-            changed = true;
-            return {
-              requestId: req.requestId,
-              roomId: req.roomId,
-              userId: req.userId,
-              userName: req.userName,
-              createdAt: req.createdAt,
-              deadlineAt: req.deadlineAt,
-              status: "timeout",
-              decidedAt: now
-            };
-          }
-          return req;
-        });
-        if (changed) {
-          saveRequests(roomId, next);
-        }
-        return changed;
-      }
-
-      function renderHostRequests() {
-        if (!activeHostRoom || !isHostSession(activeHostRoom)) {
-          requestListEl.innerHTML = "<li class=\"req-item\">ホストroomを作成すると申請が表示されます。</li>";
-          return;
-        }
-
-        applyTimeouts(activeHostRoom);
-        var list = loadRequests(activeHostRoom).slice().sort(function (a, b) {
-          return b.createdAt - a.createdAt;
-        });
-
-        if (list.length === 0) {
-          requestListEl.innerHTML = "<li class=\"req-item\">申請はまだありません。</li>";
-          return;
-        }
-
-        requestListEl.innerHTML = list.map(function (req) {
-          var statusLabel = req.status;
-          var leftMs = Math.max(0, req.deadlineAt - Date.now());
-          var leftSec = Math.ceil(leftMs / 1000);
-          var extra = req.status === "pending" ? "残り " + leftSec + "秒" : "処理済み";
-          return (
-            "<li class=\"req-item\">" +
-              "<strong>" + escapeHtml(req.userName) + "</strong> " +
-              "<span class=\"mono\">(" + req.userId + ")</span>" +
-              "<p class=\"req-meta\">request: <span class=\"mono\">" + req.requestId + "</span> / status: " + statusLabel + " / " + extra + "</p>" +
-              (req.status === "pending"
-                ? "<div class=\"row\">" +
-                    "<button class=\"button primary\" type=\"button\" data-action=\"approve\" data-id=\"" + req.requestId + "\">承認</button>" +
-                    "<button class=\"button danger\" type=\"button\" data-action=\"reject\" data-id=\"" + req.requestId + "\">拒否</button>" +
-                  "</div>"
-                : "")
-            + "</li>"
-          );
-        }).join("");
+        el.textContent = text;
       }
 
       function escapeHtml(value) {
@@ -474,123 +186,182 @@
           .replaceAll("'", "&#39;");
       }
 
-      function decideRequest(requestId, decision) {
-        if (!activeHostRoom || !isHostSession(activeHostRoom)) {
-          setStatus(hostStatusEl, "ng", "このタブはホストではありません。");
+      function validateRoomId(roomId) {
+        if (!ROOM_REGEX.test(roomId || "")) {
+          return "room IDは半角英数字8文字で入力してください（大小区別）。";
+        }
+        return "";
+      }
+
+      function getSignalBase() {
+        return (signalInput.value || "").trim().replace(/\/+$/, "");
+      }
+
+      function renderSignalBase() {
+        signalLabel.textContent = getSignalBase() || "(未設定)";
+      }
+
+      function buildShareUrl(roomId) {
+        var url = new URL(window.location.href);
+        url.searchParams.set("room", roomId);
+        var base = getSignalBase();
+        if (base) {
+          url.searchParams.set("signal", base);
+        }
+        return url.toString();
+      }
+
+      function updateUrlRoom(roomId) {
+        var url = new URL(window.location.href);
+        url.searchParams.set("room", roomId);
+        var base = getSignalBase();
+        if (base) url.searchParams.set("signal", base);
+        history.replaceState({}, "", url.toString());
+      }
+
+      async function api(path, method, body) {
+        var base = getSignalBase();
+        if (!base) throw new Error("シグナリングURLが未設定です。");
+        var options = { method: method || "GET", headers: { "Content-Type": "application/json" } };
+        if (body) options.body = JSON.stringify(body);
+        var res = await fetch(base + path, options);
+        var data = await res.json().catch(function () { return {}; });
+        if (!res.ok) {
+          throw new Error(data.error || ("http_" + res.status));
+        }
+        return data;
+      }
+
+      async function claimHost(roomId) {
+        var valid = validateRoomId(roomId);
+        if (valid) {
+          setStatus(hostStatusEl, "ng", valid);
           return;
         }
-        var list = loadRequests(activeHostRoom);
-        var changed = false;
-        var now = Date.now();
-        var next = list.map(function (req) {
-          if (req.requestId === requestId && req.status === "pending") {
-            changed = true;
-            return {
-              requestId: req.requestId,
-              roomId: req.roomId,
-              userId: req.userId,
-              userName: req.userName,
-              createdAt: req.createdAt,
-              deadlineAt: req.deadlineAt,
-              status: decision,
-              decidedAt: now
-            };
-          }
-          return req;
+        var data = await api("/api/rooms/" + roomId + "/host/claim", "POST", {
+          hostUserId: userId,
+          hostSessionId: sessionId
         });
-        if (changed) {
-          saveRequests(activeHostRoom, next);
-          setStatus(hostStatusEl, "ok", "申請を" + (decision === "approved" ? "承認" : "拒否") + "しました。");
-          renderHostRequests();
-          refreshJoinStatus();
+        activeHostRoom = roomId;
+        hostRoomIdEl.value = roomId;
+        shareUrlEl.value = buildShareUrl(roomId);
+        setStatus(hostStatusEl, "ok", "ホスト接続しました。申請を待機中です。");
+        renderHostRequests(data.requests || []);
+        updateUrlRoom(roomId);
+      }
+
+      function renderHostRequests(list) {
+        if (!list || list.length === 0) {
+          requestListEl.innerHTML = "<li class=\"req-item\">申請はまだありません。</li>";
+          return;
+        }
+        requestListEl.innerHTML = list.map(function (req) {
+          var pendingSec = Math.max(0, Math.ceil((req.deadlineAt - Date.now()) / 1000));
+          var info = req.status === "pending" ? ("残り " + pendingSec + " 秒") : "処理済み";
+          return (
+            "<li class=\"req-item\">" +
+              "<strong>" + escapeHtml(req.userName) + "</strong> " +
+              "<span class=\"mono\">(" + req.userId + ")</span>" +
+              "<p class=\"req-meta\">request: <span class=\"mono\">" + req.requestId + "</span> / status: " + req.status + " / " + info + "</p>" +
+              (req.status === "pending"
+                ? "<div class=\"row\">" +
+                    "<button class=\"button primary\" type=\"button\" data-action=\"approve\" data-id=\"" + req.requestId + "\">承認</button>" +
+                    "<button class=\"button danger\" type=\"button\" data-action=\"reject\" data-id=\"" + req.requestId + "\">拒否</button>" +
+                  "</div>"
+                : "")
+            + "</li>"
+          );
+        }).join("");
+      }
+
+      async function refreshHostRequests() {
+        if (!activeHostRoom) return;
+        try {
+          var data = await api("/api/rooms/" + activeHostRoom + "/host/requests?hostSessionId=" + encodeURIComponent(sessionId), "GET");
+          renderHostRequests(data.requests || []);
+        } catch (err) {
+          setStatus(hostStatusEl, "ng", "ホスト申請一覧の取得失敗: " + err.message);
         }
       }
 
-      function submitJoinRequest() {
-        var roomId = joinRoomEl.value.trim();
-        var name = joinNameEl.value.trim();
-        var roomError = validateRoomId(roomId);
-        if (roomError) {
-          setStatus(joinStatusEl, "ng", roomError);
+      async function decide(requestId, decision) {
+        if (!activeHostRoom) return;
+        try {
+          await api("/api/rooms/" + activeHostRoom + "/host/requests/" + requestId + "/decision", "POST", {
+            hostSessionId: sessionId,
+            decision: decision
+          });
+          setStatus(hostStatusEl, "ok", "申請を" + (decision === "approved" ? "承認" : "拒否") + "しました。");
+          await refreshHostRequests();
+          await refreshJoinStatus();
+        } catch (err) {
+          setStatus(hostStatusEl, "ng", "判定更新失敗: " + err.message);
+        }
+      }
+
+      async function submitJoin() {
+        var roomId = (joinRoomEl.value || "").trim();
+        var userName = (joinNameEl.value || "").trim();
+        var valid = validateRoomId(roomId);
+        if (valid) {
+          setStatus(joinStatusEl, "ng", valid);
           return;
         }
-        if (!name) {
+        if (!userName) {
           setStatus(joinStatusEl, "ng", "ユーザー名を入力してください。");
           return;
         }
-
-        applyTimeouts(roomId);
-        var now = Date.now();
-        var req = {
-          requestId: generateAlphaNum(10),
-          roomId: roomId,
-          userId: userId,
-          userName: name,
-          createdAt: now,
-          deadlineAt: now + TIMEOUT_MS,
-          status: "pending",
-          decidedAt: null
-        };
-
-        var list = loadRequests(roomId);
-        list.push(req);
-        saveRequests(roomId, list);
-        activeJoinRequest = { roomId: roomId, requestId: req.requestId };
-        setUrlRoom(roomId);
-        setStatus(joinStatusEl, "warn", "承認待ちです（60秒以内）。");
-        setStatus(hostStatusEl, "warn", "新しい参加申請を受信しました。");
-        renderHostRequests();
-      }
-
-      function refreshJoinStatus() {
-        if (!activeJoinRequest) { return; }
-        var roomId = activeJoinRequest.roomId;
-        applyTimeouts(roomId);
-        var found = loadRequests(roomId).find(function (req) {
-          return req.requestId === activeJoinRequest.requestId;
-        });
-        if (!found) { return; }
-
-        if (found.status === "pending") {
-          var leftSec = Math.max(0, Math.ceil((found.deadlineAt - Date.now()) / 1000));
-          setStatus(joinStatusEl, "warn", "承認待ちです。残り " + leftSec + " 秒");
-          return;
-        }
-        if (found.status === "approved") {
-          setStatus(joinStatusEl, "ok", "承認されました。room " + roomId + " に参加できます。");
-          return;
-        }
-        if (found.status === "rejected") {
-          setStatus(joinStatusEl, "ng", "拒否されました。再参加時も再承認が必要です。");
-          return;
-        }
-        if (found.status === "timeout") {
-          setStatus(joinStatusEl, "ng", "承認待ちが60秒でタイムアウトしました。再申請してください。");
-        }
-      }
-
-      function initFromQuery() {
-        var room = new URLSearchParams(window.location.search).get("room");
-        if (!room) { return; }
-        joinRoomEl.value = room;
-        if (!validateRoomId(room)) {
-          if (isHostSession(room)) {
-            activeHostRoom = room;
-            hostRoomIdEl.value = room;
-            shareUrlEl.value = buildShareUrl(room);
+        try {
+          var data = await api("/api/rooms/" + roomId + "/join", "POST", {
+            userId: userId,
+            userName: userName
+          });
+          activeRequest = { roomId: roomId, requestId: data.request.requestId };
+          setStatus(joinStatusEl, "warn", "申請を送信しました。承認待ち（60秒以内）です。");
+          updateUrlRoom(roomId);
+          await refreshHostRequests();
+        } catch (err) {
+          if (err.message === "host_not_ready") {
+            setStatus(joinStatusEl, "ng", "ホストが未接続です。ホスト側でroomを開始してください。");
+            return;
           }
-          setStatus(joinStatusEl, "warn", "URLの room を入力欄へ反映しました。");
-        } else {
-          setStatus(joinStatusEl, "ng", "URLの room 値が不正です（8文字英数字のみ）。");
+          setStatus(joinStatusEl, "ng", "参加申請失敗: " + err.message);
         }
       }
 
-      createRoomBtn.addEventListener("click", function () {
-        var roomId = generateAlphaNum(8);
-        claimHost(roomId);
-        setUrlRoom(roomId);
-        setStatus(hostStatusEl, "ok", "roomを作成しました。参加申請を待機中です。");
-        renderHostRequests();
+      async function refreshJoinStatus() {
+        if (!activeRequest) return;
+        try {
+          var data = await api("/api/rooms/" + activeRequest.roomId + "/requests/" + activeRequest.requestId + "/status?userId=" + encodeURIComponent(userId), "GET");
+          var req = data.request;
+          if (req.status === "pending") {
+            var sec = Math.max(0, Math.ceil((req.deadlineAt - Date.now()) / 1000));
+            setStatus(joinStatusEl, "warn", "承認待ちです。残り " + sec + " 秒");
+          } else if (req.status === "approved") {
+            setStatus(joinStatusEl, "ok", "承認されました。room " + req.roomId + " へ参加可能です。");
+          } else if (req.status === "rejected") {
+            setStatus(joinStatusEl, "ng", "拒否されました。再参加時は再承認が必要です。");
+          } else if (req.status === "timeout") {
+            setStatus(joinStatusEl, "ng", "60秒タイムアウトです。再申請してください。");
+          }
+        } catch (err) {
+          setStatus(joinStatusEl, "ng", "申請状態の取得失敗: " + err.message);
+        }
+      }
+
+      saveSignalBtn.addEventListener("click", function () {
+        localStorage.setItem(SIGNAL_BASE_KEY, getSignalBase());
+        renderSignalBase();
+        setStatus(signalStatus, "ok", "シグナリングURLを保存しました。");
+      });
+
+      createRoomBtn.addEventListener("click", async function () {
+        var roomId = randomAlphaNum(8);
+        try {
+          await claimHost(roomId);
+        } catch (err) {
+          setStatus(hostStatusEl, "ng", "ホスト開始失敗: " + err.message);
+        }
       });
 
       copyUrlBtn.addEventListener("click", function () {
@@ -607,30 +378,40 @@
         });
       });
 
-      joinBtn.addEventListener("click", submitJoinRequest);
-
       requestListEl.addEventListener("click", function (event) {
         var target = event.target;
-        if (!(target instanceof HTMLElement)) { return; }
+        if (!(target instanceof HTMLElement)) return;
         var action = target.dataset.action;
         var id = target.dataset.id;
-        if (!action || !id) { return; }
-        if (action === "approve") { decideRequest(id, "approved"); }
-        if (action === "reject") { decideRequest(id, "rejected"); }
+        if (!action || !id) return;
+        if (action === "approve") decide(id, "approved");
+        if (action === "reject") decide(id, "rejected");
       });
 
-      window.addEventListener("storage", function () {
-        renderHostRequests();
-        refreshJoinStatus();
+      joinBtn.addEventListener("click", function () {
+        submitJoin();
       });
+
+      function initFromQuery() {
+        var room = new URLSearchParams(window.location.search).get("room");
+        if (room) {
+          joinRoomEl.value = room;
+          if (!validateRoomId(room)) {
+            setStatus(joinStatusEl, "warn", "URLのroomを入力欄へ反映しました。");
+          } else {
+            setStatus(joinStatusEl, "ng", "URLのroomが不正です（8文字英数字）。");
+          }
+        }
+      }
 
       setInterval(function () {
-        renderHostRequests();
+        refreshHostRequests();
         refreshJoinStatus();
       }, 1000);
 
       initFromQuery();
-      renderHostRequests();
+      renderHostRequests([]);
+      setStatus(signalStatus, "warn", "シグナリングURLを確認してからテストしてください。");
     })();
   </script>
 </body>
