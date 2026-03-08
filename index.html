@@ -51,6 +51,7 @@
     .requests { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
     .req-item { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fbfdff; }
     .req-meta { margin: 0; font-size: 13px; color: var(--muted); }
+    .game-card { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: #f8fbff; }
     @media (max-width: 860px) { .tools { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -64,9 +65,21 @@
       </p>
       <div class="links">
         <a class="button primary" href="#room">ルーム導線へ移動</a>
+        <a class="button" href="#games">ゲーム一覧へ移動</a>
       </div>
       <p class="small">user ID(LocalStorage): <span id="user-id-label" class="mono"></span></p>
       <p class="small">session ID(タブ単位): <span id="session-id-label" class="mono"></span></p>
+    </section>
+
+    <section id="games" class="panel section">
+      <h2>ゲーム一覧</h2>
+      <article class="game-card">
+        <h3>オセロ (Godot Web)</h3>
+        <p class="small">1デバイス2人対戦のMVP版です。以下の導線から起動できます。</p>
+        <div class="row">
+          <a class="button primary" href="./games/reversi/index.html">オセロを起動</a>
+        </div>
+      </article>
     </section>
 
     <section id="room" class="panel section">

@@ -2,6 +2,12 @@
 
 GitHub Pages で公開する静的サイト（MVP）です。
 
+## TASK-010 追加内容（Godot Reversi統合）
+
+- Godot Web出力物を `games/reversi/` に配置
+- ギャラリー `index.html` に `./games/reversi/index.html` への起動導線を追加
+- Branch deploy（main / root）でそのまま配信可能な相対パス構成
+
 ## TASK-007 追加内容（security hardening）
 
 - フロント: `index.html`
@@ -31,6 +37,22 @@ GitHub Pages で公開する静的サイト（MVP）です。
 1. このリポジトリの `main` ブランチに変更を反映する
 2. 反映後、GitHub Pages が自動で再デプロイされる
 3. 数十秒から数分後に公開ページへ更新が反映される
+
+## Reversi再エクスポート手順
+
+前提:
+- Godot 4.6 の Web export templates が `C:\Users\rocky\AppData\Roaming\Godot\export_templates\4.6.stable` に配置済みであること
+
+1. Godotプロジェクト（`workspaces/godot/reversi`）で `export_presets.cfg` を用意
+2. Godot 4.6 で Web をエクスポート（出力先を本リポジトリへ指定）
+3. 生成物を `games/reversi/` に上書き
+4. ギャラリーの `index.html` から `./games/reversi/index.html` が開けることを確認
+
+実行コマンド例（Builder実施）:
+
+```powershell
+& 'C:\Users\rocky\Dropbox\software\Godot_v4.6-stable_win64.exe\Godot_v4.6-stable_win64_console.exe' --headless --path 'C:\Users\rocky\Dropbox\service\browser_game_gallery2\workspaces\godot\reversi' --export-release 'Web' 'C:\Users\rocky\Dropbox\service\browser_game_gallery2\workspaces\web\minigame-gallery\games\reversi\index.html'
+```
 
 ## ローカル開発手順（2プロセス）
 
