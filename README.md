@@ -66,7 +66,19 @@ GitHub Pages で公開する静的サイト（MVP）です。
 ## TASK-012 root cause
 
 - 原因: デプロイ済みランタイムが main pack 解決を自動推論に依存しており、過去成果物の混在やキャッシュ状態によって `.pck` 参照が崩れて `Couldn't load project data at path '.'` が発生。
-- 対策: basename統一 + クリーン置換 + `--main-pack reversi.pck` 明示 + service worker干渉回避設定を適用。
+- 対策: basename統一 + クリーン置換 + `--main-pack reversi.pck?v=<build>` 明示 + service worker干渉回避設定を適用。
+
+## エラー再発時の復旧手順（ユーザー向け）
+
+1. Reversiページを開く: `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.html`
+2. DevTools > Application > Service Workers で `.../minigame-gallery/games/reversi/` の登録を `Unregister`
+3. DevTools > Application > Storage > `Clear site data`
+4. `Ctrl+Shift+R` で強制再読み込み
+5. 検証URL（200確認）:
+   - `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.html`
+   - `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.js?v=20260308x`
+   - `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.wasm?v=20260308x`
+   - `https://rokinosun.github.io/minigame-gallery/games/reversi/reversi.pck?v=20260308x`
 
 ## ローカル開発手順（2プロセス）
 
