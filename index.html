@@ -14,6 +14,9 @@
       --line: #dbe3ea;
       --accent: #0b6fa4;
       --accent-soft: #dff1fb;
+      --ok: #0a6b3d;
+      --warn: #9a5b00;
+      --ng: #9b1c1c;
     }
 
     * { box-sizing: border-box; }
@@ -30,7 +33,7 @@
     }
 
     .container {
-      width: min(960px, 92vw);
+      width: min(1024px, 92vw);
       margin: 0 auto;
       padding: 28px 0 52px;
     }
@@ -82,6 +85,7 @@
       font-weight: 700;
       color: var(--text);
       background: #fff;
+      cursor: pointer;
     }
 
     .button.primary {
@@ -90,25 +94,19 @@
       color: #fff;
     }
 
-    .section {
-      margin-top: 18px;
+    .button.danger {
+      border-color: #d6b1b1;
+      color: #6d1d1d;
+      background: #fff6f6;
     }
 
-    .room-tools {
+    .section { margin-top: 18px; }
+
+    .tools {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 10px;
-    }
-
-    .tool h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .tool p {
-      margin: 0 0 10px;
-      color: var(--muted);
     }
 
     .row {
@@ -120,7 +118,7 @@
 
     .input {
       width: 100%;
-      max-width: 360px;
+      max-width: 100%;
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 10px 11px;
@@ -129,11 +127,46 @@
       background: #fff;
     }
 
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 0.03em;
+    }
+
+    .small {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .status {
       margin: 10px 0 0;
       font-size: 14px;
-      color: var(--muted);
       min-height: 1.4em;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.warn { color: var(--warn); }
+    .status.ng { color: var(--ng); }
+
+    .requests {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .req-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .req-meta {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
     }
 
     .grid {
@@ -141,16 +174,6 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 10px;
-    }
-
-    .game h3 {
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
-
-    .game p {
-      margin: 0;
-      color: var(--muted);
     }
 
     .tag {
@@ -165,9 +188,8 @@
       padding: 4px 8px;
     }
 
-    @media (max-width: 700px) {
-      .grid { grid-template-columns: 1fr; }
-      .room-tools { grid-template-columns: 1fr; }
+    @media (max-width: 860px) {
+      .tools, .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -177,41 +199,51 @@
       <span class="eyebrow">MINIGAME GALLERY MVP</span>
       <h1>ブラウザですぐ遊べる<br>ミニゲーム集</h1>
       <p class="lead">
-        ログイン不要で開始できる軽量ゲームギャラリーです。ゲームページではルーム作成・URL共有を起点に、友達と対戦できる構成を想定しています。
+        ログイン不要で開始できる軽量ゲームギャラリーです。以下はRoom URL生成とホスト承認フローを静的で再現したMVPです。
       </p>
       <div class="links">
-        <a class="button primary" href="#games">ゲーム一覧を見る</a>
-        <a class="button" href="#guide">参加方法を見る</a>
+        <a class="button primary" href="#room">ルーム導線へ移動</a>
+        <a class="button" href="#guide">遊び方を見る</a>
       </div>
+      <p class="small">現在の user ID: <span id="user-id-label" class="mono"></span></p>
     </section>
 
     <section id="room" class="panel section">
-      <h2>ルーム作成・参加（MVP）</h2>
-      <div class="room-tools">
-        <article class="panel tool">
-          <h3>ルーム作成</h3>
-          <p>ボタンで room ID を生成し、共有URLを作成します。</p>
+      <h2>Room URL + ホスト承認フロー（MVP）</h2>
+      <p class="small">
+        room ID仕様: 半角英数字のみ / 8文字固定 / 大文字小文字区別（<code>^[A-Za-z0-9]{8}$</code>）
+      </p>
+
+      <div class="tools">
+        <article class="panel">
+          <h3>ホスト側</h3>
+          <p class="small">ルーム作成後、参加申請を承認/拒否します。承認は毎回必要です。</p>
           <div class="row">
             <button class="button primary" id="create-room-btn" type="button">room IDを生成</button>
             <button class="button" id="copy-url-btn" type="button">共有URLをコピー</button>
           </div>
           <div class="row">
-            <input class="input" id="room-id-output" type="text" readonly aria-label="生成されたroom id">
+            <input class="input mono" id="host-room-id" type="text" readonly aria-label="host room id">
           </div>
           <div class="row">
-            <input class="input" id="share-url-output" type="text" readonly aria-label="共有url">
+            <input class="input mono" id="share-url" type="text" readonly aria-label="share url">
           </div>
-          <p class="status" id="create-status"></p>
+          <p class="status" id="host-status"></p>
+          <h4>参加申請一覧</h4>
+          <ul class="requests" id="request-list"></ul>
         </article>
 
-        <article class="panel tool">
-          <h3>ルーム参加</h3>
-          <p>room ID を入力して参加導線を開始します。</p>
+        <article class="panel">
+          <h3>参加側</h3>
+          <p class="small">ユーザー名は同名可。申請は60秒でタイムアウトします。</p>
           <div class="row">
-            <input class="input" id="join-room-input" type="text" maxlength="12" placeholder="例: A1B2C3" aria-label="参加するroom id">
+            <input class="input" id="join-name" type="text" maxlength="20" placeholder="ユーザー名を入力" aria-label="username">
           </div>
           <div class="row">
-            <button class="button primary" id="join-room-btn" type="button">このroomに参加</button>
+            <input class="input mono" id="join-room-id" type="text" maxlength="8" placeholder="8文字のroom ID" aria-label="room id">
+          </div>
+          <div class="row">
+            <button class="button primary" id="join-btn" type="button">参加申請を送信</button>
           </div>
           <p class="status" id="join-status"></p>
         </article>
@@ -221,12 +253,12 @@
     <section id="games" class="panel section">
       <h2>ゲーム一覧（プレースホルダ）</h2>
       <div class="grid">
-        <article class="panel game">
+        <article class="panel">
           <h3>オセロ</h3>
           <p>2人対戦向け。ルームURL共有で参加。</p>
           <span class="tag">公開準備中</span>
         </article>
-        <article class="panel game">
+        <article class="panel">
           <h3>〇×ゲーム</h3>
           <p>短時間で遊べるシンプル対戦。</p>
           <span class="tag">公開準備中</span>
@@ -237,32 +269,98 @@
     <section id="guide" class="panel section">
       <h2>導線（MVP）</h2>
       <ol>
-        <li>トップでゲームを選択</li>
-        <li>ルームを作成して共有URLをコピー</li>
-        <li>URL共有で友達を招待して開始</li>
+        <li>ホストが room ID を生成して共有URLを配布</li>
+        <li>参加者が user名 と room ID で申請</li>
+        <li>ホストが承認/拒否し、参加者に結果が反映</li>
       </ol>
     </section>
   </main>
+
   <script>
     (function () {
-      var createBtn = document.getElementById("create-room-btn");
-      var copyBtn = document.getElementById("copy-url-btn");
-      var joinBtn = document.getElementById("join-room-btn");
-      var roomIdOutput = document.getElementById("room-id-output");
-      var shareUrlOutput = document.getElementById("share-url-output");
-      var joinInput = document.getElementById("join-room-input");
-      var createStatus = document.getElementById("create-status");
-      var joinStatus = document.getElementById("join-status");
+      var ROOM_REGEX = /^[A-Za-z0-9]{8}$/;
+      var ALNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var TIMEOUT_MS = 60000;
+      var USER_ID_KEY = "mgg_user_id";
+      var SESSION_ID_KEY = "mgg_session_id";
+      var HOST_KEY_PREFIX = "mgg_host_";
+      var REQ_KEY_PREFIX = "mgg_reqs_";
 
-      function normalizeRoomId(value) {
-        return (value || "")
-          .toUpperCase()
-          .replace(/[^A-Z0-9_-]/g, "")
-          .slice(0, 12);
+      var createRoomBtn = document.getElementById("create-room-btn");
+      var copyUrlBtn = document.getElementById("copy-url-btn");
+      var joinBtn = document.getElementById("join-btn");
+      var hostRoomIdEl = document.getElementById("host-room-id");
+      var shareUrlEl = document.getElementById("share-url");
+      var hostStatusEl = document.getElementById("host-status");
+      var joinStatusEl = document.getElementById("join-status");
+      var joinNameEl = document.getElementById("join-name");
+      var joinRoomEl = document.getElementById("join-room-id");
+      var requestListEl = document.getElementById("request-list");
+      var userIdLabelEl = document.getElementById("user-id-label");
+
+      var activeHostRoom = "";
+      var activeJoinRequest = null;
+      var userId = ensureStoredId(USER_ID_KEY, 12);
+      var sessionId = ensureSessionId();
+      userIdLabelEl.textContent = userId;
+
+      function ensureStoredId(key, length) {
+        var saved = localStorage.getItem(key);
+        if (saved) { return saved; }
+        var next = generateAlphaNum(length);
+        localStorage.setItem(key, next);
+        return next;
       }
 
-      function generateRoomId() {
-        return Math.random().toString(36).slice(2, 8).toUpperCase();
+      function ensureSessionId() {
+        var saved = sessionStorage.getItem(SESSION_ID_KEY);
+        if (saved) { return saved; }
+        var next = generateAlphaNum(12);
+        sessionStorage.setItem(SESSION_ID_KEY, next);
+        return next;
+      }
+
+      function generateAlphaNum(length) {
+        var bytes = new Uint8Array(length);
+        crypto.getRandomValues(bytes);
+        var out = "";
+        for (var i = 0; i < length; i += 1) {
+          out += ALNUM[bytes[i] % ALNUM.length];
+        }
+        return out;
+      }
+
+      function setStatus(el, type, message) {
+        el.className = "status " + type;
+        el.textContent = message;
+      }
+
+      function validateRoomId(value) {
+        if (!ROOM_REGEX.test(value || "")) {
+          return "room IDは半角英数字8文字で入力してください（大文字小文字区別）。";
+        }
+        return "";
+      }
+
+      function hostKey(roomId) {
+        return HOST_KEY_PREFIX + roomId;
+      }
+
+      function reqKey(roomId) {
+        return REQ_KEY_PREFIX + roomId;
+      }
+
+      function readJson(key, fallback) {
+        try {
+          var raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        } catch (err) {
+          return fallback;
+        }
+      }
+
+      function writeJson(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
       }
 
       function buildShareUrl(roomId) {
@@ -271,62 +369,268 @@
         return url.toString();
       }
 
-      function setRoomState(roomId, message) {
-        var cleanId = normalizeRoomId(roomId);
-        if (!cleanId) {
-          createStatus.textContent = "room IDが未設定です。";
-          return;
-        }
-        var shareUrl = buildShareUrl(cleanId);
-        roomIdOutput.value = cleanId;
-        shareUrlOutput.value = shareUrl;
-        joinInput.value = cleanId;
-        createStatus.textContent = message || "room IDを設定しました。";
+      function setUrlRoom(roomId) {
+        var next = new URL(window.location.href);
+        next.searchParams.set("room", roomId);
+        history.replaceState({}, "", next.toString());
       }
 
-      function reflectRoomFromQuery() {
-        var fromQuery = normalizeRoomId(new URLSearchParams(window.location.search).get("room"));
-        if (fromQuery) {
-          setRoomState(fromQuery, "URLのroomを反映しました。");
-          joinStatus.textContent = "参加候補 room: " + fromQuery;
+      function claimHost(roomId) {
+        var now = Date.now();
+        writeJson(hostKey(roomId), {
+          roomId: roomId,
+          hostUserId: userId,
+          hostSessionId: sessionId,
+          updatedAt: now
+        });
+        activeHostRoom = roomId;
+        hostRoomIdEl.value = roomId;
+        shareUrlEl.value = buildShareUrl(roomId);
+      }
+
+      function isHostSession(roomId) {
+        var data = readJson(hostKey(roomId), null);
+        return !!(data && data.hostSessionId === sessionId);
+      }
+
+      function loadRequests(roomId) {
+        return readJson(reqKey(roomId), []);
+      }
+
+      function saveRequests(roomId, list) {
+        writeJson(reqKey(roomId), list);
+      }
+
+      function applyTimeouts(roomId) {
+        if (!roomId) { return false; }
+        var list = loadRequests(roomId);
+        var now = Date.now();
+        var changed = false;
+        var next = list.map(function (req) {
+          if (req.status === "pending" && now >= req.deadlineAt) {
+            changed = true;
+            return {
+              requestId: req.requestId,
+              roomId: req.roomId,
+              userId: req.userId,
+              userName: req.userName,
+              createdAt: req.createdAt,
+              deadlineAt: req.deadlineAt,
+              status: "timeout",
+              decidedAt: now
+            };
+          }
+          return req;
+        });
+        if (changed) {
+          saveRequests(roomId, next);
+        }
+        return changed;
+      }
+
+      function renderHostRequests() {
+        if (!activeHostRoom || !isHostSession(activeHostRoom)) {
+          requestListEl.innerHTML = "<li class=\"req-item\">ホストroomを作成すると申請が表示されます。</li>";
+          return;
+        }
+
+        applyTimeouts(activeHostRoom);
+        var list = loadRequests(activeHostRoom).slice().sort(function (a, b) {
+          return b.createdAt - a.createdAt;
+        });
+
+        if (list.length === 0) {
+          requestListEl.innerHTML = "<li class=\"req-item\">申請はまだありません。</li>";
+          return;
+        }
+
+        requestListEl.innerHTML = list.map(function (req) {
+          var statusLabel = req.status;
+          var leftMs = Math.max(0, req.deadlineAt - Date.now());
+          var leftSec = Math.ceil(leftMs / 1000);
+          var extra = req.status === "pending" ? "残り " + leftSec + "秒" : "処理済み";
+          return (
+            "<li class=\"req-item\">" +
+              "<strong>" + escapeHtml(req.userName) + "</strong> " +
+              "<span class=\"mono\">(" + req.userId + ")</span>" +
+              "<p class=\"req-meta\">request: <span class=\"mono\">" + req.requestId + "</span> / status: " + statusLabel + " / " + extra + "</p>" +
+              (req.status === "pending"
+                ? "<div class=\"row\">" +
+                    "<button class=\"button primary\" type=\"button\" data-action=\"approve\" data-id=\"" + req.requestId + "\">承認</button>" +
+                    "<button class=\"button danger\" type=\"button\" data-action=\"reject\" data-id=\"" + req.requestId + "\">拒否</button>" +
+                  "</div>"
+                : "")
+            + "</li>"
+          );
+        }).join("");
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll("\"", "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function decideRequest(requestId, decision) {
+        if (!activeHostRoom || !isHostSession(activeHostRoom)) {
+          setStatus(hostStatusEl, "ng", "このタブはホストではありません。");
+          return;
+        }
+        var list = loadRequests(activeHostRoom);
+        var changed = false;
+        var now = Date.now();
+        var next = list.map(function (req) {
+          if (req.requestId === requestId && req.status === "pending") {
+            changed = true;
+            return {
+              requestId: req.requestId,
+              roomId: req.roomId,
+              userId: req.userId,
+              userName: req.userName,
+              createdAt: req.createdAt,
+              deadlineAt: req.deadlineAt,
+              status: decision,
+              decidedAt: now
+            };
+          }
+          return req;
+        });
+        if (changed) {
+          saveRequests(activeHostRoom, next);
+          setStatus(hostStatusEl, "ok", "申請を" + (decision === "approved" ? "承認" : "拒否") + "しました。");
+          renderHostRequests();
+          refreshJoinStatus();
         }
       }
 
-      createBtn.addEventListener("click", function () {
-        var roomId = generateRoomId();
-        setRoomState(roomId, "新しいroom IDを生成しました。");
-        joinStatus.textContent = "";
-      });
-
-      copyBtn.addEventListener("click", async function () {
-        if (!shareUrlOutput.value) {
-          createStatus.textContent = "先にroom IDを生成または入力してください。";
+      function submitJoinRequest() {
+        var roomId = joinRoomEl.value.trim();
+        var name = joinNameEl.value.trim();
+        var roomError = validateRoomId(roomId);
+        if (roomError) {
+          setStatus(joinStatusEl, "ng", roomError);
           return;
         }
-        try {
-          await navigator.clipboard.writeText(shareUrlOutput.value);
-          createStatus.textContent = "共有URLをコピーしました。";
-        } catch (err) {
-          shareUrlOutput.focus();
-          shareUrlOutput.select();
-          createStatus.textContent = "自動コピー不可のため、表示URLを手動コピーしてください。";
-        }
-      });
-
-      joinBtn.addEventListener("click", function () {
-        var roomId = normalizeRoomId(joinInput.value);
-        if (!roomId) {
-          joinStatus.textContent = "有効なroom IDを入力してください。";
+        if (!name) {
+          setStatus(joinStatusEl, "ng", "ユーザー名を入力してください。");
           return;
         }
-        var nextUrl = new URL(window.location.href);
-        nextUrl.searchParams.set("room", roomId);
-        history.replaceState({}, "", nextUrl.toString());
-        setRoomState(roomId, "参加用room IDを反映しました。");
-        joinStatus.textContent = "このページのURLで room " + roomId + " へ参加できます。";
+
+        applyTimeouts(roomId);
+        var now = Date.now();
+        var req = {
+          requestId: generateAlphaNum(10),
+          roomId: roomId,
+          userId: userId,
+          userName: name,
+          createdAt: now,
+          deadlineAt: now + TIMEOUT_MS,
+          status: "pending",
+          decidedAt: null
+        };
+
+        var list = loadRequests(roomId);
+        list.push(req);
+        saveRequests(roomId, list);
+        activeJoinRequest = { roomId: roomId, requestId: req.requestId };
+        setUrlRoom(roomId);
+        setStatus(joinStatusEl, "warn", "承認待ちです（60秒以内）。");
+        setStatus(hostStatusEl, "warn", "新しい参加申請を受信しました。");
+        renderHostRequests();
+      }
+
+      function refreshJoinStatus() {
+        if (!activeJoinRequest) { return; }
+        var roomId = activeJoinRequest.roomId;
+        applyTimeouts(roomId);
+        var found = loadRequests(roomId).find(function (req) {
+          return req.requestId === activeJoinRequest.requestId;
+        });
+        if (!found) { return; }
+
+        if (found.status === "pending") {
+          var leftSec = Math.max(0, Math.ceil((found.deadlineAt - Date.now()) / 1000));
+          setStatus(joinStatusEl, "warn", "承認待ちです。残り " + leftSec + " 秒");
+          return;
+        }
+        if (found.status === "approved") {
+          setStatus(joinStatusEl, "ok", "承認されました。room " + roomId + " に参加できます。");
+          return;
+        }
+        if (found.status === "rejected") {
+          setStatus(joinStatusEl, "ng", "拒否されました。再参加時も再承認が必要です。");
+          return;
+        }
+        if (found.status === "timeout") {
+          setStatus(joinStatusEl, "ng", "承認待ちが60秒でタイムアウトしました。再申請してください。");
+        }
+      }
+
+      function initFromQuery() {
+        var room = new URLSearchParams(window.location.search).get("room");
+        if (!room) { return; }
+        joinRoomEl.value = room;
+        if (!validateRoomId(room)) {
+          if (isHostSession(room)) {
+            activeHostRoom = room;
+            hostRoomIdEl.value = room;
+            shareUrlEl.value = buildShareUrl(room);
+          }
+          setStatus(joinStatusEl, "warn", "URLの room を入力欄へ反映しました。");
+        } else {
+          setStatus(joinStatusEl, "ng", "URLの room 値が不正です（8文字英数字のみ）。");
+        }
+      }
+
+      createRoomBtn.addEventListener("click", function () {
+        var roomId = generateAlphaNum(8);
+        claimHost(roomId);
+        setUrlRoom(roomId);
+        setStatus(hostStatusEl, "ok", "roomを作成しました。参加申請を待機中です。");
+        renderHostRequests();
       });
 
-      reflectRoomFromQuery();
+      copyUrlBtn.addEventListener("click", function () {
+        if (!shareUrlEl.value) {
+          setStatus(hostStatusEl, "ng", "先にroomを作成してください。");
+          return;
+        }
+        navigator.clipboard.writeText(shareUrlEl.value).then(function () {
+          setStatus(hostStatusEl, "ok", "共有URLをコピーしました。");
+        }).catch(function () {
+          shareUrlEl.focus();
+          shareUrlEl.select();
+          setStatus(hostStatusEl, "warn", "自動コピー不可のため手動コピーしてください。");
+        });
+      });
+
+      joinBtn.addEventListener("click", submitJoinRequest);
+
+      requestListEl.addEventListener("click", function (event) {
+        var target = event.target;
+        if (!(target instanceof HTMLElement)) { return; }
+        var action = target.dataset.action;
+        var id = target.dataset.id;
+        if (!action || !id) { return; }
+        if (action === "approve") { decideRequest(id, "approved"); }
+        if (action === "reject") { decideRequest(id, "rejected"); }
+      });
+
+      window.addEventListener("storage", function () {
+        renderHostRequests();
+        refreshJoinStatus();
+      });
+
+      setInterval(function () {
+        renderHostRequests();
+        refreshJoinStatus();
+      }, 1000);
+
+      initFromQuery();
+      renderHostRequests();
     })();
   </script>
 </body>
