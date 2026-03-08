@@ -94,6 +94,48 @@
       margin-top: 18px;
     }
 
+    .room-tools {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .tool h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .tool p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .input {
+      width: 100%;
+      max-width: 360px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 11px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .status {
+      margin: 10px 0 0;
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 1.4em;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -125,6 +167,7 @@
 
     @media (max-width: 700px) {
       .grid { grid-template-columns: 1fr; }
+      .room-tools { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -139,6 +182,39 @@
       <div class="links">
         <a class="button primary" href="#games">ゲーム一覧を見る</a>
         <a class="button" href="#guide">参加方法を見る</a>
+      </div>
+    </section>
+
+    <section id="room" class="panel section">
+      <h2>ルーム作成・参加（MVP）</h2>
+      <div class="room-tools">
+        <article class="panel tool">
+          <h3>ルーム作成</h3>
+          <p>ボタンで room ID を生成し、共有URLを作成します。</p>
+          <div class="row">
+            <button class="button primary" id="create-room-btn" type="button">room IDを生成</button>
+            <button class="button" id="copy-url-btn" type="button">共有URLをコピー</button>
+          </div>
+          <div class="row">
+            <input class="input" id="room-id-output" type="text" readonly aria-label="生成されたroom id">
+          </div>
+          <div class="row">
+            <input class="input" id="share-url-output" type="text" readonly aria-label="共有url">
+          </div>
+          <p class="status" id="create-status"></p>
+        </article>
+
+        <article class="panel tool">
+          <h3>ルーム参加</h3>
+          <p>room ID を入力して参加導線を開始します。</p>
+          <div class="row">
+            <input class="input" id="join-room-input" type="text" maxlength="12" placeholder="例: A1B2C3" aria-label="参加するroom id">
+          </div>
+          <div class="row">
+            <button class="button primary" id="join-room-btn" type="button">このroomに参加</button>
+          </div>
+          <p class="status" id="join-status"></p>
+        </article>
       </div>
     </section>
 
@@ -162,10 +238,96 @@
       <h2>導線（MVP）</h2>
       <ol>
         <li>トップでゲームを選択</li>
-        <li>ゲームページでルームを作成</li>
+        <li>ルームを作成して共有URLをコピー</li>
         <li>URL共有で友達を招待して開始</li>
       </ol>
     </section>
   </main>
+  <script>
+    (function () {
+      var createBtn = document.getElementById("create-room-btn");
+      var copyBtn = document.getElementById("copy-url-btn");
+      var joinBtn = document.getElementById("join-room-btn");
+      var roomIdOutput = document.getElementById("room-id-output");
+      var shareUrlOutput = document.getElementById("share-url-output");
+      var joinInput = document.getElementById("join-room-input");
+      var createStatus = document.getElementById("create-status");
+      var joinStatus = document.getElementById("join-status");
+
+      function normalizeRoomId(value) {
+        return (value || "")
+          .toUpperCase()
+          .replace(/[^A-Z0-9_-]/g, "")
+          .slice(0, 12);
+      }
+
+      function generateRoomId() {
+        return Math.random().toString(36).slice(2, 8).toUpperCase();
+      }
+
+      function buildShareUrl(roomId) {
+        var url = new URL(window.location.href);
+        url.searchParams.set("room", roomId);
+        return url.toString();
+      }
+
+      function setRoomState(roomId, message) {
+        var cleanId = normalizeRoomId(roomId);
+        if (!cleanId) {
+          createStatus.textContent = "room IDが未設定です。";
+          return;
+        }
+        var shareUrl = buildShareUrl(cleanId);
+        roomIdOutput.value = cleanId;
+        shareUrlOutput.value = shareUrl;
+        joinInput.value = cleanId;
+        createStatus.textContent = message || "room IDを設定しました。";
+      }
+
+      function reflectRoomFromQuery() {
+        var fromQuery = normalizeRoomId(new URLSearchParams(window.location.search).get("room"));
+        if (fromQuery) {
+          setRoomState(fromQuery, "URLのroomを反映しました。");
+          joinStatus.textContent = "参加候補 room: " + fromQuery;
+        }
+      }
+
+      createBtn.addEventListener("click", function () {
+        var roomId = generateRoomId();
+        setRoomState(roomId, "新しいroom IDを生成しました。");
+        joinStatus.textContent = "";
+      });
+
+      copyBtn.addEventListener("click", async function () {
+        if (!shareUrlOutput.value) {
+          createStatus.textContent = "先にroom IDを生成または入力してください。";
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(shareUrlOutput.value);
+          createStatus.textContent = "共有URLをコピーしました。";
+        } catch (err) {
+          shareUrlOutput.focus();
+          shareUrlOutput.select();
+          createStatus.textContent = "自動コピー不可のため、表示URLを手動コピーしてください。";
+        }
+      });
+
+      joinBtn.addEventListener("click", function () {
+        var roomId = normalizeRoomId(joinInput.value);
+        if (!roomId) {
+          joinStatus.textContent = "有効なroom IDを入力してください。";
+          return;
+        }
+        var nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("room", roomId);
+        history.replaceState({}, "", nextUrl.toString());
+        setRoomState(roomId, "参加用room IDを反映しました。");
+        joinStatus.textContent = "このページのURLで room " + roomId + " へ参加できます。";
+      });
+
+      reflectRoomFromQuery();
+    })();
+  </script>
 </body>
 </html>
